@@ -1,0 +1,7 @@
+# openai version was previously verified in the author-reported environment.
+openai==1.99.9
+# These three versions were reported by pip show on 2026-11-06.
+# pandas was visible from the user-site directory, outside the conda env.
+pandas==2.3.3
+python-dotenv==1.1.1
+httpx==0.28.1
