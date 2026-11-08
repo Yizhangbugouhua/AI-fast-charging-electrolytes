@@ -1,0 +1,21 @@
+# Local credentials
+**/API_key.env
+**/.env
+**/*.env
+# Local research inputs and generated outputs
+**/input_json/
+**/extraction_result/
+data/private/
+outputs/
+*.log
+# Python environments and caches
+**/__pycache__/
+*.py[cod]
+.venv/
+# Notebook/editor temporary files
+**/.ipynb_checkpoints/
+~$*
+
+# External pretrained model installation
+external/smi_ted_light/*.pt
+external/smi_ted_light/*.pth
