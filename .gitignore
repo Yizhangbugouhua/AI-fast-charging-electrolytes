@@ -8,6 +8,10 @@
 data/private/
 outputs/
 *.log
+# Extraction files written outside the default output directory
+LLM_code/*_skeleton.json
+LLM_code/*_parsed.csv
+LLM_code/skeleton_parsed_all.csv
 # Python environments and caches
 **/__pycache__/
 *.py[cod]

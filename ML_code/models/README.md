@@ -1,17 +1,18 @@
-# Trained MLP artefacts
+# Trained MLP files
 
-Prediction requires three files from the same training run:
+The following files are bundled in [`final/`](final/), which is the default `MLP_MODEL_DIR`:
 
 | File | Contents and use |
 | --- | --- |
 | `best_model_fixed.pth` | SprintMLP state dictionary, including BatchNorm state |
 | `best_scaler_fixed.pkl` | StandardScaler fitted on the training split |
-| `best_features.npy` | Feature-index array applied after full-input standardisation |
+| `best_features.npy` | Input-column indices applied after standardisation |
+| `artifacts.json` | File sizes, SHA-256 checksums and inspected model properties |
 
-The training script saves `np.arange(X.shape[1])` as the feature-index array; it represents all input columns in this implementation.
+The linear-layer shapes in the state dictionary are `770 → 512 → 512 → 29 → 1`. The scaler accepts 770 input features and records scikit-learn version 1.7.2. The feature-index array contains all indices from 0 to 769; it is not a reduced feature subset.
 
-Place the three files in `ML_code/models/final/`, or set `MLP_MODEL_DIR` to their directory. These files are **not included in this revision**, and no model-download URL is provided here.
+Prediction combines the SMI-TED embedding with temperature and C-rate, standardises the full input, selects columns by index and evaluates the MLP. A 768-dimensional embedding gives 770 full input features. These shapes match the supplied scripts, but numerical reproduction and common training-run provenance are not established by dimension checks alone.
 
-Prediction applies SMI-TED encoding, appends temperature and C-rate, standardises the full input, selects columns by index and evaluates the MLP. The encoder checkpoint, vocabulary, input-feature order and scaler must match the training configuration. A 768-dimensional encoder yields 770 full input features before any indexing.
+Use the model, scaler, indices, feature order and encoder configuration corresponding to the same training procedure. To use another model directory, set `MLP_MODEL_DIR` to that directory. The scaler's `n_samples_seen_` describes its fitted sample count, not the complete literature-database size.
 
-The SMI-TED pretrained checkpoint is separate from the trained MLP artefacts; see [external/README.md](../../external/README.md).
+The SMI-TED pretrained checkpoint is separate from these MLP files; see [external/README.md](../../external/README.md).

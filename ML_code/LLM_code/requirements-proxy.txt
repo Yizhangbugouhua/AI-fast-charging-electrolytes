@@ -1,4 +1,0 @@
--r requirements.txt
-# Optional SOCKS transport. Historical version was not confirmed.
-# Install only when LITERATURE_SOCKS_PROXY / SOCKS_PROXY is configured.
-httpx-socks

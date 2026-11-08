@@ -1,12 +1,12 @@
 # Dependency names derived from the supplied ML scripts.
-# Historical versions are NOT yet verified; this is NOT a locked reproduction environment.
+# Only scikit-learn's saved version is established; this is NOT a locked reproduction environment.
 # The fast_transformers import requires the author-used implementation/source, still to verify.
-# Names below do not establish historical package versions.
+# Other names below do not establish historical package versions.
 numpy
 pandas
 openpyxl
 torch
-scikit-learn
+scikit-learn==1.7.2
 joblib
 matplotlib
 tqdm
