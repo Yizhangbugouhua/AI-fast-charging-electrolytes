@@ -1,27 +1,29 @@
-# Supplied SMI-TED implementation and remaining assets
+# SMI-TED representation model
 
-The author-supplied `smi_ted_light/load.py` is included byte-for-byte. Its `load_smi_ted(folder, ckpt_filename, vocab_filename)` and `encode_raw(seqs, batch_size, return_torch)` interfaces match the workflow scripts. Static checks confirm evaluation mode and detached returned embeddings. The implementation has not been executed with actual pretrained weights in this review.
+`smi_ted_light/load.py` contains the loading, tokenisation and encoding implementation used by the workflow. The upstream SMI-TED project is [IBM/materials](https://github.com/IBM/materials). The supplied implementation includes the `encode_raw` interface for formulation strings.
 
-## Expected files
+## Required assets
 
-The directory defaults to `external/smi_ted_light/` and can be changed with `SMITED_DIR`:
+The directory selected by `SMITED_DIR` must contain:
 
-| File | Status |
-| --- | --- |
-| `load.py` | Supplied and included unchanged |
-| `smi_ted_light.pt` | Matching pretrained checkpoint not supplied |
-| `bert_vocab_curated.txt` | Matching vocabulary not supplied |
+| File | Purpose | Included |
+| --- | --- | --- |
+| `load.py` | Loader and model implementation | Yes |
+| `smi_ted_light.pt` | Matching pretrained checkpoint | No |
+| `bert_vocab_curated.txt` | Matching vocabulary | No |
 
-The loader reads n_embd and max_len from the checkpoint. Actual embedding width and whether formulation sequences are truncated require those assets. The loader automatically uses CUDA when available, independently of the workflow's MLP device setting.
+The scripts import `load_smi_ted` from `load.py` and pass the checkpoint and vocabulary filenames shown above. An upstream project link alone does not identify a compatible checkpoint/vocabulary pair; use the assets corresponding to this implementation and its original training configuration.
 
-## Dependencies and provenance
+## Dependencies
 
-Imports include torch, numpy, pandas, transformers, RDKit, regex, tqdm and fast_transformers. Dependency names have been identified, but historical versions and the exact fast_transformers installation source remain unverified. Do not assume a similarly named package or a different fork reproduces the implementation.
+The implementation imports PyTorch, NumPy, pandas, Transformers, RDKit, regex, tqdm and `fast_transformers`. The ML dependency file lists the named packages except for the original `fast_transformers` installation, whose exact distribution/source and version are not specified in this revision. ML package versions are not pinned here.
 
-Upstream SMI-TED reference: https://github.com/IBM/materials . The supplied file's exact upstream revision, local changes and applicable source attribution remain to be recorded; the file is not presented as a newly invented encoder. No third-party checkpoint has been substituted.
+The precise upstream revision and attribution for the supplied loader should accompany a versioned software release. The model assets and their source information are currently outside this source-only package.
 
-## Raw sequence handling
+## Encoding behaviour
 
-encode_raw skips RDKit normalisation and sends the original sequence to the tokenizer. The tokenizer still uses the supplied SMILES regular expression: `<sep>` is split into `s`, `p`, `>` by this regex, rather than being emitted as a single special token. Numeric text is tokenised character by character. The code is preserved unchanged so historical features are not silently altered. Full token-ID handling must be checked with the actual vocabulary.
+`encode_raw` bypasses RDKit SMILES normalisation and passes the formulation string to the tokenizer, Transformer encoder and autoencoder. It returns one vector per input sequence. The embedding dimension `n_embd` and maximum token length `max_len` are read from checkpoint hyperparameters.
 
-load_smi_ted calls model.eval(); encode_raw detaches intermediate outputs before returning its Tensor. Complete checkpoint loading, tokenizer compatibility and actual neural encoding remain to be tested.
+The tokenizer uses the SMILES regular expression defined in `load.py`. With this expression, `<sep>` is split into `s`, `p`, `>` rather than emitted as one registered special token; numeric strings are tokenised character by character. Tokenisation uses truncation at `max_len`. The same implementation, vocabulary and checkpoint must be used for training-feature generation and prediction.
+
+`load_smi_ted` sets evaluation mode. `encode_raw` detaches collected embeddings before constructing its returned tensor. The implementation automatically uses CUDA when available, so the MLP's CPU setting does not by itself force all encoder operations to run on CPU.
