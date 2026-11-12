@@ -15,6 +15,7 @@ This module constructs formulation sequences, generates SMI-TED features, trains
 | `generate_candidates.py` | Sample candidate compositions and construct their sequences |
 | `predict_5c.py` | Predict at fixed 25 °C and 5C |
 | `predict_default.py` | Predict using row-specific conditions or default 25 °C and 4C |
+| `postprocessing/select_topn_by_salt.py` | Deduplicate exact `seqA` strings within each salt system, retain the highest-scoring row and export per-salt Top-N candidates |
 
 Run commands below from the repository root. Each stage requires its documented inputs.
 
@@ -135,3 +136,17 @@ The supplied model, scaler and feature-index files are included in `ML_code/mode
 | `SMITED_DIR` | `external/smi_ted_light` |
 | `MLP_MODEL_DIR` | `ML_code/models/final` |
 | `PREDICTION_OUTPUT_DIR` | `outputs/predictions/5c` or `outputs/predictions/default` |
+
+## 6. Post-process and select candidates by salt system
+
+After fixed-5C inference, run the post-processing script to group candidates by the two salt columns, normalize the `LiPO2F2`/`LiDFP` alias, deduplicate exact `seqA` strings within each salt system while retaining the highest predicted retention, and export up to 100,000 unique candidates per salt system.
+
+```bash
+python ML_code/postprocessing/select_topn_by_salt.py \\
+  --input /path/to/all_pred_place_5C.csv \\
+  --output /path/to/top_candidates_by_salt \\
+  --top-n 100000 \\
+  --chunk-size 200000
+```
+
+See [postprocessing/README.md](postprocessing/README.md) for the exact deduplication definition, column requirements and output files.
