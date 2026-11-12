@@ -4,6 +4,13 @@ Research code for LLM-assisted literature data extraction, formulation represent
 
 The workflow connects literature extraction, six-slot formulation sequences, SMI-TED representations, an MLP regressor and experimental feedback. The prediction target is the capacity ratio $R_x=Q_x/Q_{1\mathrm{C}}$, with discharge specific capacities paired within the same rate-test series. It describes rate performance relative to 1C.
 
+## Research workflow and maintenance
+
+- [End-to-end research workflow](docs/RESEARCH_WORKFLOW.md): from literature extraction and curated formulation data to 5C screening.
+- [Repository structure](docs/REPOSITORY_STRUCTURE.md): where code, model artefacts, examples and private local data belong.
+- [Reproducibility guide](docs/REPRODUCIBILITY.md): run records, checksums, model promotion and output retention.
+- [Contribution and Git workflow](CONTRIBUTING.md): branches, pull requests, review and validation.
+
 ## Repository contents
 
 | Directory | Contents | Instructions |
