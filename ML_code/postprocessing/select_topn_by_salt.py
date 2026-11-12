@@ -43,7 +43,7 @@ def canonical_salt(value: object) -> str:
     raw = str(value).strip()
     if not raw or raw.lower() in {"nan", "none", "null", "o"}:
         return "O"
-    key = re.sub(r"[\\s_+\\-]", "", raw).lower()
+    key = re.sub(r"[\s_+\-]", "", raw).lower()
     return SALT_ALIASES.get(key, raw)
 
 
